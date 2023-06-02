@@ -87,4 +87,9 @@ public class ApplicationController extends AbstractController {
         fileStorageService.deleteAll(applicationId);
         return ok();
     }
+
+    @PutMapping(value = "/{applicationId}/contract")
+    public ResponseDTO<Response> contract(@PathVariable(value = "applicationId") Long applicationId) {
+        return ok(applicationService.contract(applicationId));
+    }
 }

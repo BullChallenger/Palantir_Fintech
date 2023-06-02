@@ -7,12 +7,14 @@ import com.palantir.fintech.exception.BaseException;
 import com.palantir.fintech.exception.ResultType;
 import com.palantir.fintech.repository.AcceptTermsRepository;
 import com.palantir.fintech.repository.ApplicationRepository;
+import com.palantir.fintech.repository.JudgementRepository;
 import com.palantir.fintech.repository.TermsRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +27,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final ModelMapper modelMapper;
 
     private final ApplicationRepository applicationRepository;
+    private final JudgementRepository judgementRepository;
     private final TermsRepository termsRepository;
     private final AcceptTermsRepository acceptTermsRepository;
 
@@ -100,5 +103,26 @@ public class ApplicationServiceImpl implements ApplicationService {
         }
 
         return true;
+    }
+
+    @Override
+    public Response contract(Long applicationId) {
+        Application theApplication = applicationRepository.findById(applicationId).orElseThrow(() ->
+                new BaseException(ResultType.SYSTEM_ERROR)
+        );
+
+        judgementRepository.findByApplicationId(applicationId).orElseThrow(() ->
+                new BaseException(ResultType.SYSTEM_ERROR)
+        );
+
+        if (theApplication.getApprovalAmount() == null ||
+                theApplication.getApprovalAmount().compareTo(BigDecimal.ZERO) == 0) {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        }
+
+        theApplication.setContractedAt(LocalDateTime.now());
+        applicationRepository.save(theApplication);
+
+        return null;
     }
 }

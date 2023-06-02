@@ -61,4 +61,8 @@ public class Application extends BaseEntity {
     @Comment(value = "신청일자")
     @Column(columnDefinition = "DATETIME DEFAULT NULL")
     private LocalDateTime appliedAt;
+
+    @Comment(value = "계약일자")
+    @Column(columnDefinition = "DATETIME DEFAULT NULL")
+    private LocalDateTime contractedAt;
 }

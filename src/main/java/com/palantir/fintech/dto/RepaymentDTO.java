@@ -2,23 +2,17 @@ package com.palantir.fintech.dto;
 
 import lombok.*;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
-public class ApplicationDTO implements Serializable {
+public class RepaymentDTO {
 
     @Getter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Request {
-        private String name;
-        private String cellPhone;
-        private String email;
-
-        private BigDecimal hopeAmount;
+        private BigDecimal repaymentAmount;
     }
 
     @Getter
@@ -29,14 +23,9 @@ public class ApplicationDTO implements Serializable {
     public static class Response {
         private Long applicationId;
 
-        private String name;
-        private String cellPhone;
-        private String email;
+        private BigDecimal repaymentAmount;
+        private BigDecimal balance;
 
-        private BigDecimal hopeAmount;
-
-        private LocalDateTime appliedAt;
-        private LocalDateTime contractedAt;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
     }
@@ -46,8 +35,13 @@ public class ApplicationDTO implements Serializable {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class AcceptTermsDTO {
-        List<Long> acceptTermsIds;
+    public static class ListResponse {
+        private Long repaymentId;
+
+        private BigDecimal repaymentAmount;
+
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
     }
 
     @Getter
@@ -55,13 +49,14 @@ public class ApplicationDTO implements Serializable {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GrantAmount {
+    public static class UpdateResponse {
         private Long applicationId;
 
-        private BigDecimal approvalAmount;
+        private BigDecimal beforeRepaymentAmount;
+        private BigDecimal afterRepaymentAmount;
+        private BigDecimal balance;
 
         private LocalDateTime createdAt;
-
         private LocalDateTime updatedAt;
     }
 }
